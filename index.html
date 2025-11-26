@@ -368,6 +368,22 @@
 
     function createCalendar() {
       const container = document.getElementById("calendar");
+
+      // --- RESET PRZEZ PARAMETR W URL: ?reset=1 ---
+      const url = new URL(window.location.href);
+      const params = url.searchParams;
+
+      if (params.get("reset") === "1") {
+        // Czyścimy zapisane okienka dla tego urządzenia
+        localStorage.removeItem(STORAGE_KEY);
+
+        // Usuwamy parametr z URL, żeby reset nie powtarzał się przy każdym odświeżeniu
+        params.delete("reset");
+        const newUrl =
+          url.pathname + (params.toString() ? "?" + params.toString() : "");
+        window.history.replaceState({}, "", newUrl);
+      }
+      
       const currentDay = getCurrentDayForCalendar();
       const openedSet = loadOpenedFromStorage();
 
